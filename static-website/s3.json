@@ -1,0 +1,36 @@
+{
+    "Description": "S3 file to store HTML",
+    "Resources": {
+        "MyS3Bucket": {
+          "Type": "AWS::S3::Bucket",
+          "DeletionPolicy" : "Retain",
+          "UpdateReplacePolicy" : "Retain",
+          "Properties": {
+            "BucketName": "chris-kay-static-html",
+            "WebsiteConfiguration": {
+                "IndexDocument": "index.html"
+            }
+          }
+        },
+        "ReadPolicy": {
+            "Type": "AWS::S3::BucketPolicy",
+            "Properties": {
+                "Bucket": {
+                    "Ref": "MyS3Bucket"
+                },
+                "PolicyDocument": {
+                    "Statement": {
+                        "Action": "s3:GetObject",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ETUEO7EAKJJ3T"
+                        },
+                        "Resource": {
+                            "Fn::Sub":"arn:aws:s3:::${MyS3Bucket}/*"
+                        }
+                    }
+                }
+            }
+        }
+      }
+}
