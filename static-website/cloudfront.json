@@ -1,0 +1,67 @@
+{
+    "Description": "CLoudfront to hit the S3 and render HTML",
+    "Resources": {
+        "CloudFrontOriginAccessIdentity": {
+            "Type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+            "Properties": {
+                "CloudFrontOriginAccessIdentityConfig": {
+                    "Comment": "arn:aws:s3:::chris-kay-static-html"
+                }
+            }
+        },
+        "CachePolicy":{
+            "Type" : "AWS::CloudFront::CachePolicy",
+            "Properties" : {
+                "CachePolicyConfig" : {
+                    "DefaultTTL" : 3600,
+                    "MaxTTL" : 3600,
+                    "MinTTL" : 3600,
+                    "Name" : "chris-kay-static-website-cache-policy",
+                    "ParametersInCacheKeyAndForwardedToOrigin" :{
+                        "CookiesConfig": {
+                            "CookieBehavior" : "none"
+                          },
+                          "EnableAcceptEncodingGzip" : false,
+                          "HeadersConfig": {
+                            "HeaderBehavior" : "none"
+                          },
+                          "QueryStringsConfig": {
+                            "QueryStringBehavior" : "none"
+                          }
+
+                    }
+                  }
+              }
+          },
+        "MyCloudfront": {
+            "Type": "AWS::CloudFront::Distribution",
+            "Properties":{
+                "DistributionConfig": {
+                    "DefaultCacheBehavior": {
+                        "AllowedMethods":  ["HEAD", "GET", "OPTIONS"],
+                        "CachedMethods":  ["HEAD", "GET", "OPTIONS"],
+                        "TargetOriginId": "s3origin",
+                        "ViewerProtocolPolicy": "allow-all",
+                        "DefaultTTL": 360,
+                            "ForwardedValues": {
+                            "Cookies": {
+                                "Forward": "none"
+                            },
+                            "QueryString": false
+                        }
+                    },
+                    "DefaultRootObject": "index.html",
+                    "Enabled": true,
+                    "HttpVersion": "http2",
+                    "Origins": [{
+                        "DomainName": "chris-kay-static-html.s3-website-eu-west-1.amazonaws.com",
+                        "Id": "s3origin",
+                        "CustomOriginConfig": {
+                            "OriginProtocolPolicy": "https-only"
+                        }
+                    }]                  
+                }
+            }
+        }
+    }
+}
