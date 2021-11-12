@@ -23,7 +23,7 @@
                         "Action": "s3:GetObject",
                         "Effect": "Allow",
                         "Principal": {
-                            "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ETUEO7EAKJJ3T"
+                            "AWS": "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity E74IQKARQ3JHX"
                         },
                         "Resource": {
                             "Fn::Sub":"arn:aws:s3:::${MyS3Bucket}/*"
